@@ -19,6 +19,7 @@ Route::put('/atividades/{atividade}', [AtividadeController::class, 'update']);
 Route::delete('/atividades/{atividade}', [AtividadeController::class, 'destroy']);
 
 Route::get('/subtarefas',[SubtarefaController::class,'index']);
+Route::get('/subtarefas/{atividade_id}', [SubtarefaController::class, 'buscarPorAtividadeId']);
 Route::get('/subtarefas/{subtarefa}', [SubTarefaController::class, 'show']);
 Route::post('/subtarefas', [SubTarefaController::class, 'store']);
 Route::put('/subtarefas/{subtarefa}', [SubTarefaController::class, 'update']);

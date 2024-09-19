@@ -104,4 +104,23 @@ class SubtarefaController extends Controller
             ],400);
         }
     }
+    public function buscarPorAtividadeId($atividade_id) : JsonResponse
+{
+    // Verifica se o parâmetro foi fornecido
+    if (!$atividade_id) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Parâmetro atividade_id é obrigatório',
+        ], 400);
+    }
+
+    // Busca as subtarefas com base no id da atividade
+    $subtarefas = Subtarefa::where('idAtividade', $atividade_id)->get();
+
+    // Retorna as subtarefas como JSON
+    return response()->json([
+        'status' => true,
+        'message' => $subtarefas,
+    ]);
+}
 }
