@@ -36,4 +36,9 @@ class Subtarefa extends Model
      * @return array<string, string>
      */
     
+     public function atividade() {
+        return $this->belongsTo(Atividade::class, 'idAtividade'); // idAtividade é a chave estrangeira na tabela de subtarefas
+    }
+    
+    
 }

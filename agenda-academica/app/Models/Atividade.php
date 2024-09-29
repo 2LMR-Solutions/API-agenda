@@ -37,5 +37,7 @@ class Atividade extends Model
      *
      * @return array<string, string>
      */
-    
+    public function subtarefas() {
+        return $this->hasMany(Subtarefa::class, 'idAtividade');
+    }    
 }
