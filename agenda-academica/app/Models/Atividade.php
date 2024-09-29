@@ -37,7 +37,12 @@ class Atividade extends Model
      *
      * @return array<string, string>
      */
+     /**
+     * Get the subtarefas for the atividade.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function subtarefas() {
         return $this->hasMany(Subtarefa::class, 'idAtividade');
-    }    
+    }
 }
