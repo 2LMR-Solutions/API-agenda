@@ -58,28 +58,26 @@ class SubtarefaController extends Controller
     }
     
 
-    public function update(Request $request, Subtarefa $subtarefa) : JsonResponse{
-        
+    public function update(Request $request, Subtarefa $subtarefa) : JsonResponse {
         DB::beginTransaction();
-        try{
+        try {
             $subtarefa->update([
-                'id' => $request->id,
                 'nome' => $request->nome,
-                'desc' => $request->desc,
-                'data_Inicio' => $request->data_Inicio,
-                'data_Final' => $request->data_Final
+                'concluida' => $request->concluida, // Se necessário, para atualizar o status
             ]);
+            
             DB::commit();
             return response()->json([
                 'status' => true,
                 'tarefa' => $subtarefa,
-                'message' => "Tarefa editado com sucesso",
-            ],200);
-        }catch(Exception $e){
+                'message' => "Tarefa editada com sucesso",
+            ], 200);
+        } catch (Exception $e) {
+            DB::rollBack(); // Certifique-se de reverter a transação em caso de erro
             return response()->json([
                 'status' => false,
-                'message' => "Tarefa não editada",
-            ],400);
+                'message' => "Tarefa não editada: " . $e->getMessage(), // Inclui mensagem de erro
+            ], 400);
         }
 
         return response()->json([
