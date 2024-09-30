@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AtividadeRequest;
 use App\Models\Atividade;
+use App\Models\Subtarefa;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -60,11 +61,9 @@ class AtividadeController extends Controller
     
 
     public function update(Request $request, Atividade $atividade) : JsonResponse{
-        
         DB::beginTransaction();
         try{
             $atividade->update([
-                'id' => $request->id,
                 'nome' => $request->nome,
                 'desc' => $request->desc,
                 'data_Inicio' => $request->data_Inicio,
@@ -74,35 +73,39 @@ class AtividadeController extends Controller
             return response()->json([
                 'status' => true,
                 'tarefa' => $atividade,
-                'message' => "Tarefa editado com sucesso",
+                'message' => "Tarefa editada com sucesso",
             ],200);
         }catch(Exception $e){
+            DB::rollBack();
             return response()->json([
                 'status' => false,
                 'message' => "Tarefa não editada",
             ],400);
         }
-
-        return response()->json([
-            'status' => true,
-            'tarefa' => $atividade,
-            'message' => "Tarefa editada com sucesso",
-        ],200);
     }
 
-    public function destroy(Atividade $atividade) : JsonResponse{
-        try{
+    public function destroy(Atividade $atividade) : JsonResponse {
+        DB::beginTransaction();
+        try {
+            // Excluir todas as subtarefas associadas à atividade
+            $atividade->subtarefas()->delete(); // Certifique-se de que a relação está correta
+    
+            // Agora exclua a atividade
             $atividade->delete();
+    
+            DB::commit(); // Certifique-se de que você está comprometendo a transação
+    
             return response()->json([
                 'status' => true,
                 'tarefa' => $atividade,
                 'message' => "Tarefa removida com sucesso",
-            ],200);
-        }catch(Exception $e){
+            ], 200);
+        } catch(Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => false,
                 'message' => "Tarefa não removida",
-            ],400);
+            ], 400);
         }
     }
 }
